@@ -24,6 +24,7 @@ function apprise(string, user_args, callback) {
         overlay = $('<div class="appriseOverlay"></div>'),
         inner = $('<div class="appriseInner"></div>'),
         buttons = $('<div class="aButtons"></div>'),
+        input,
         posTop = 100,
         prop;
 
@@ -44,16 +45,22 @@ function apprise(string, user_args, callback) {
     wrapper.appendTo('body');
 
     inner.append(string).appendTo(wrapper);
+        
+    //Setting to strict equality check to ensure a default field value of 0 is permitted.
+    if (args.input !== false) {
+    
+        var inputIsElement = (typeof (args.input) === 'object' || (args.input.nodeType && args.input.nodeType === 1));
+        
+        //if args.input is a jQuery object or DOM node, insert it directly.
+        //otherwise default to a plain <input>
+        input = (inputIsElement) ? args.input : $('<input class="aTextbox" />');
+        
+        //if args.input is a string, use it as the default value for <input>
+        if (typeof (args.input) === 'string') { input.val(args.input); }
 
-    if (args.input) {
-        if (typeof (args.input) === 'string') {
-            inner.append('<div class="aInput"><input type="text" class="aTextbox" value="' + args.input + '" /></div>');
-        } else if (typeof (args.input) === 'object') {
-            inner.append($('<div class="aInput"></div>').append(args.input));
-        } else {
-            inner.append('<div class="aInput"><input type="text" class="aTextbox" /></div>');
-        }
-        $('.aTextbox').focus();
+        inner.append($('<div class="aInput"></div>').append(input));
+        input.focus();
+
     }
 
     inner.append(buttons);

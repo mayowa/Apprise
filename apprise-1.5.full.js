@@ -5,9 +5,9 @@
 //
 // Cached jQuery variables, position center added by Josiah Ruddell
 
-function apprise(string, args, callback) {
+function apprise(string, user_args, callback) {
 
-    var default_args = {
+    var args = {
             'confirm': false,         // Ok and Cancel buttons
             'verify': false,     // Yes and No buttons
             'input': false,         // Text input (can be true or string for default text)
@@ -24,12 +24,13 @@ function apprise(string, args, callback) {
         overlay = $('<div class="appriseOverlay" id="aOverlay"></div>'),
         inner = $('<div class="appriseInner"></div>'),
         buttons = $('<div class="aButtons"></div>'),
-        posTop = 100;
+        posTop = 100,
+        prop;
 
-    if (args) {
-        for (var prop in default_args){
-            if (typeof args[prop] === "undefined"){
-                args[prop] = default_args[prop];
+    if (user_args) {
+        for (prop in args){
+            if (args.hasOwnProperty(prop) && typeof user_args[prop] !== "undefined"){
+                args[prop] = user_args[prop];
             }
         }
     }
@@ -44,61 +45,46 @@ function apprise(string, args, callback) {
 
     inner.append(string).appendTo(wrapper);
 
-    if (args) {
-        if (args.input) {
-            if (typeof (args.input) === 'string') {
-                inner.append('<div class="aInput"><input type="text" class="aTextbox" t="aTextbox" value="' + args.input + '" /></div>');
-            }
-            if (typeof (args.input) === 'object') {
-                inner.append($('<div class="aInput"></div>').append(args.input));
-            }
-            else {
-                inner.append('<div class="aInput"><input type="text" class="aTextbox" t="aTextbox" /></div>');
-            }
-            $('.aTextbox').focus();
+    if (args.input) {
+        if (typeof (args.input) === 'string') {
+            inner.append('<div class="aInput"><input type="text" class="aTextbox" t="aTextbox" value="' + args.input + '" /></div>');
         }
+        if (typeof (args.input) === 'object') {
+            inner.append($('<div class="aInput"></div>').append(args.input));
+        }
+        else {
+            inner.append('<div class="aInput"><input type="text" class="aTextbox" t="aTextbox" /></div>');
+        }
+        $('.aTextbox').focus();
     }
 
     inner.append(buttons);
 
-    if (args) {
-
-        if (args.confirm || args.input) {
-            buttons.append('<button value="ok">' + args.textOk + '</button>');
-            buttons.append('<button value="cancel">' + args.textCancel + '</button>');
-        } else if (args.verify) {
-            buttons.append('<button value="ok">' + args.textYes + '</button>');
-            buttons.append('<button value="cancel">' + args.textNo + '</button>');
-        } else {
-            buttons.append('<button value="ok">' + args.textOk + '</button>');
-        }
-
+    if (args.confirm || args.input) {
+        buttons.append('<button value="ok">' + args.textOk + '</button>');
+        buttons.append('<button value="cancel">' + args.textCancel + '</button>');
+    } else if (args.verify) {
+        buttons.append('<button value="ok">' + args.textYes + '</button>');
+        buttons.append('<button value="cancel">' + args.textNo + '</button>');
     } else {
-        buttons.append('<button value="ok">Ok</button>');
+        buttons.append('<button value="ok">' + args.textOk + '</button>');
     }
 
     // position after adding buttons
     wrapper.css("left", ($(window).width() - $('.appriseOuter').width()) / 2 + $(window).scrollLeft() + "px");
 
     // get center
-    if (args) {
+    if (args.position && args.position === 'center') {
+        posTop = (aHeight - wrapper.height()) / 2;
+    }
 
-        if (args.position && args.position === 'center') {
-            posTop = (aHeight - wrapper.height()) / 2;
-        }
-
-        if (args.animate) {
-            var aniSpeed = args.animate;
-            if (isNaN(aniSpeed)) { aniSpeed = 400; }
-            wrapper.css('top', '-200px').show().animate({ top: posTop }, aniSpeed);
-        } else {
-            wrapper.css('top', posTop).fadeIn(200);
-        }
-
+    if (args.animate) {
+        var aniSpeed = args.animate;
+        if (isNaN(aniSpeed)) { aniSpeed = 400; }
+        wrapper.css('top', '-200px').show().animate({ top: posTop }, aniSpeed);
     } else {
         wrapper.css('top', posTop).fadeIn(200);
     }
-
 
     $(document).keydown(function (e) {
         if (overlay.is(':visible')) {
@@ -125,15 +111,12 @@ function apprise(string, args, callback) {
             $(this).text("");
             var wButton = $(this).attr("value");
             if (wButton === 'ok') {
-                if (args) {
-                    if (args.input) { callback(aText); }
-                    else { callback(true); }
-                }
-                else {
+                if (args.input) {
+                    callback(aText);
+                } else {
                     callback(true);
                 }
-            }
-            else if (wButton === 'cancel') {
+            } else if (wButton === 'cancel') {
                 callback(false);
             }
         }

@@ -101,25 +101,26 @@ function apprise(string, user_args, callback) {
         }
     });
 
-    var aText = ($('.aTextbox').val()) ? $('.aTextbox').val() : false;
-
-    $('.aTextbox').keyup(function (){ aText = $(this).val(); });
 
     $('.aButtons > button').click(function () {
 
+        //Get the required values before deleting the apprise modal/fields
+        var inputvalue = (input) ? input.val() : "",
+            buttonvalue = $(this).attr("value");
+        
+        //Delete the apprise modal
         overlay.remove();
         wrapper.remove();
 
+        //If a callback is specified, act on the values we just collected.
         if (callback) {
-            $(this).text("");
-            var wButton = $(this).attr("value");
-            if (wButton === 'ok') {
+            if (buttonvalue === 'ok') {
                 if (args.input) {
-                    callback(aText);
+                    callback(inputvalue);
                 } else {
                     callback(true);
                 }
-            } else if (wButton === 'cancel') {
+            } else if (buttonvalue === 'cancel') {
                 callback(false);
             }
         }

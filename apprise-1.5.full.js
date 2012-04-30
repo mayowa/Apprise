@@ -18,12 +18,14 @@ function apprise(string, user_args, callback) {
             textNo: 'No',         // No button default text
             position: 'center'    // position center (y-axis) any other option will default to 100 top
         },
-        aHeight = $(document).height(),
-        aWidth = $(document).width(),
-        wrapper = $('<div class="appriseOuter"></div>'),
-        overlay = $('<div class="appriseOverlay"></div>'),
-        inner = $('<div class="appriseInner"></div>'),
-        buttons = $('<div class="aButtons"></div>'),
+        doc = $(document),
+        win = $(window),
+        aHeight = doc.height(),
+        aWidth = doc.width(),
+        wrapper = $('<div class="appriseOuter" />'),
+        overlay = $('<div class="appriseOverlay" />'),
+        inner = $('<div class="appriseInner" />'),
+        buttons = $('<div class="aButtons" />'),
         input,
         posTop = 100,
         prop;
@@ -58,7 +60,7 @@ function apprise(string, user_args, callback) {
         //if args.input is a string, use it as the default value for <input>
         if (typeof (args.input) === 'string') { input.val(args.input); }
 
-        inner.append($('<div class="aInput"></div>').append(input));
+        inner.append($('<div class="aInput" />').append(input));
         input.focus();
 
     }
@@ -76,7 +78,7 @@ function apprise(string, user_args, callback) {
     }
 
     // position after adding buttons
-    wrapper.css("left", ($(window).width() - $('.appriseOuter').width()) / 2 + $(window).scrollLeft() + "px");
+    wrapper.css("left", (win.width() - wrapper.width()) / 2 + win.scrollLeft() + "px");
 
     // get center
     if (args.position === 'center') {
@@ -90,7 +92,7 @@ function apprise(string, user_args, callback) {
         wrapper.css('top', posTop).fadeIn(200);
     }
 
-    $(document).keydown(function (e) {
+    doc.keydown(function (e) {
         if (overlay.is(':visible')) {
             if (e.keyCode === 13){
                 $('.aButtons > button[value="ok"]').click();

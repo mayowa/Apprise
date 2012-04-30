@@ -79,7 +79,7 @@ function apprise(string, user_args, callback) {
     wrapper.css("left", ($(window).width() - $('.appriseOuter').width()) / 2 + $(window).scrollLeft() + "px");
 
     // get center
-    if (args.position && args.position === 'center') {
+    if (args.position === 'center') {
         posTop = (aHeight - wrapper.height()) / 2;
     }
 

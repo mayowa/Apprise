@@ -8,20 +8,20 @@
 function apprise(string, user_args, callback) {
 
     var args = {
-            confirm: false,         // Ok and Cancel buttons
-            verify: false,     // Yes and No buttons
+            confirm: false,       // Ok and Cancel buttons
+            verify: false,        // Yes and No buttons
             input: false,         // Text input (can be true or string for default text)
-            animate: false,     // Groovy animation (can true or number, default is 400)
-            textOk: 'Ok',     // Ok button default text
+            animate: false,       // Groovy animation (can true or number, default is 400)
+            textOk: 'Ok',         // Ok button default text
             textCancel: 'Cancel', // Cancel button default text
-            textYes: 'Yes',     // Yes button default text
-            textNo: 'No',     // No button default text
-            position: 'center'// position center (y-axis) any other option will default to 100 top
+            textYes: 'Yes',       // Yes button default text
+            textNo: 'No',         // No button default text
+            position: 'center'    // position center (y-axis) any other option will default to 100 top
         },
         aHeight = $(document).height(),
         aWidth = $(document).width(),
         wrapper = $('<div class="appriseOuter"></div>'),
-        overlay = $('<div class="appriseOverlay" id="aOverlay"></div>'),
+        overlay = $('<div class="appriseOverlay"></div>'),
         inner = $('<div class="appriseInner"></div>'),
         buttons = $('<div class="aButtons"></div>'),
         posTop = 100,
@@ -47,11 +47,11 @@ function apprise(string, user_args, callback) {
 
     if (args.input) {
         if (typeof (args.input) === 'string') {
-            inner.append('<div class="aInput"><input type="text" class="aTextbox" t="aTextbox" value="' + args.input + '" /></div>');
+            inner.append('<div class="aInput"><input type="text" class="aTextbox" value="' + args.input + '" /></div>');
         } else if (typeof (args.input) === 'object') {
             inner.append($('<div class="aInput"></div>').append(args.input));
         } else {
-            inner.append('<div class="aInput"><input type="text" class="aTextbox" t="aTextbox" /></div>');
+            inner.append('<div class="aInput"><input type="text" class="aTextbox" /></div>');
         }
         $('.aTextbox').focus();
     }
